@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/10/31 20:38:03 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/10/31 20:44:38 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ char *get_next_line(int fd)
 	{
 		//append new read to actual data and check again for \n
 			//new malloc of size buffer then str join of data and new buffer
+				//end += read (fd, u.temp, bs);
+				//u.buffer = ft_strjoin(u.buffer, u.temp) - start;
+				//start = 0;
 	}
 
 	//read(fd, u.buffer , BUFFER_SIZE);
