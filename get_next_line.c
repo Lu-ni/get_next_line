@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 
-int  check_return(char *str, int start, int end)
+int check_return(char *str, int start, int end, int *inl)
 {
 	int i;
 
@@ -25,7 +25,10 @@ int  check_return(char *str, int start, int end)
 	while (i < end)
 	{
 		if (str[i] == '\n')
-			return (1);
+		{
+			*inl = i;
+			return (i);
+		}
 		i++;
 	}
 	return (0);
@@ -33,32 +36,71 @@ int  check_return(char *str, int start, int end)
 
 char *get_next_line(int fd)
 {
-	static	t_utils u;
-	char	*line;
-	
-	// init the static if first call
+	static t_utils u;
+	char          *line;
+	int            inl;
+	char          *tmp;
+	int            endtmp;
+
+	if (BUFFER_SIZE < 1)
+		return (NULL);
 	if (!u.buffer)
+	{
 		u.buffer = malloc(BUFFER_SIZE + 1);
-	// when it-s init
-	// maybe do a big while around this if else.
-	if (check_return(u.buffer, u.start, u.end))
-	{
-		//malloc line and return it
+		u.end = read(fd, u.buffer, BUFFER_SIZE);
+		if (u.end < 0)
+			return (NULL);
+		u.buffer[u.end] = '\0';
 	}
-	else
+	while (1)
 	{
-		//append new read to actual data and check again for \n
-			//new malloc of size buffer then str join of data and new buffer
-				//end += read (fd, u.temp, bs);
-				//u.buffer = ft_strjoin(u.buffer, u.temp) - start;
-				//start = 0;
+		if (check_return(u.buffer, u.start, u.end, &inl))
+		{
+			line = malloc(sizeof(char) * (inl - u.start + 1));
+			if (!line)
+			{
+				free(u.buffer);
+				return (line);
+			}
+			ft_memcpy(line, &u.buffer[u.start], inl - u.start);
+			line[inl - u.start] = '\0';
+			u.start = inl + 1;
+			return (line);
+		}
+		else
+		{
+			tmp = malloc(BUFFER_SIZE + 1);
+			if (!tmp)
+			{
+				free(u.buffer);
+				return (NULL);
+			}
+			endtmp = read(fd, tmp, BUFFER_SIZE);
+			tmp[endtmp] = '\0';
+			u.buffer = ft_strjoin(&u.buffer[u.start], tmp, u.buffer);
+			u.end = u.end + endtmp - u.start;
+			u.start = 0;
+			if (!endtmp)
+			{
+				free(u.buffer);
+				return (NULL);
+			}
+		}
 	}
-
-	//read(fd, u.buffer , BUFFER_SIZE);
-
-	return (line);
 }
-int main(void)
+int main()
 {
-	get_next_line(1);	
+	int fd = open("txt.txt", O_RDONLY);
+	if (fd == -1)
+		return 1;
+
+	char *line;
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("line:\"%s\"\n", line);
+		free(line);
+	}
+
+	close(fd);
+	return 0;
 }

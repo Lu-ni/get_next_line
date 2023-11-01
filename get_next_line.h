@@ -11,15 +11,20 @@
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#define GET_NEXT_LINE_H
 
 #include <sys/_types/_size_t.h>
-
-#define BUFFER_SIZE 42
-typedef struct s_utlils{
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 2
+#endif
+typedef struct s_utlils
+{
 	char *buffer;
-	int  start;
-	int  end;
+	int   start;
+	int   end;
 
 } t_utils;
+void *ft_memcpy(void *dst, const void *src, size_t n);
+char *ft_strjoin(char *s1, char *s2, char *starts1);
+char *get_next_line(int fd);
 #endif
