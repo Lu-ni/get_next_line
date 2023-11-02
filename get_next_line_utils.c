@@ -33,8 +33,8 @@ char *ft_strjoin(char *s1, char *s2, char *starts1)
 	char *startstr;
 	int   i;
 
-	if (!s1 || !s2)
-		return ((char *) 0);
+	//	if (!s1 || !s2)
+	//		return ((char *) 0);
 	joinstr = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!joinstr)
 		return ((char *) 0);

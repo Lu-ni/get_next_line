@@ -22,12 +22,14 @@ int check_return(char *str, int start, int end, int *inl)
 	int i;
 
 	i = start;
+	if (*str)
+		return (0);
 	while (i < end)
 	{
 		if (str[i] == '\n')
 		{
 			*inl = i;
-			return (i);
+			return (1);
 		}
 		i++;
 	}
@@ -49,7 +51,10 @@ char *get_next_line(int fd)
 		u.buffer = malloc(BUFFER_SIZE + 1);
 		u.end = read(fd, u.buffer, BUFFER_SIZE);
 		if (u.end < 0)
+		{
+			free(u.buffer);
 			return (NULL);
+		}
 		u.buffer[u.end] = '\0';
 	}
 	while (1)
@@ -76,8 +81,11 @@ char *get_next_line(int fd)
 				return (NULL);
 			}
 			endtmp = read(fd, tmp, BUFFER_SIZE);
+			if (endtmp < 1)
+				return (NULL);
 			tmp[endtmp] = '\0';
 			u.buffer = ft_strjoin(&u.buffer[u.start], tmp, u.buffer);
+			// printf("buff:%s?\n", u.buffer);
 			u.end = u.end + endtmp - u.start;
 			u.start = 0;
 			if (!endtmp)
@@ -87,20 +95,4 @@ char *get_next_line(int fd)
 			}
 		}
 	}
-}
-int main()
-{
-	int fd = open("txt.txt", O_RDONLY);
-	if (fd == -1)
-		return 1;
-
-	char *line;
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("line:\"%s\"\n", line);
-		free(line);
-	}
-
-	close(fd);
-	return 0;
 }
