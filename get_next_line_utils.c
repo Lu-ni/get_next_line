@@ -31,7 +31,7 @@ char *ft_strjoin(char *s1, char *s2, char *starts1)
 {
 	char *joinstr;
 	char *startstr;
-	int   i;
+	size_t   i;
 
 	//	if (!s1 || !s2)
 	//		return ((char *) 0);
