@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/02 18:38:23 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/02 19:03:52 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int check_return(char *str, size_t start, size_t end, size_t *inl)
 	{
 		if (str[i] == '\n')
 		{
-			*inl = i;
+			*inl = i + 1;
 			return (1);
 		}
 		i++;
@@ -73,9 +73,9 @@ char *get_next_line(int fd)
 				u.state = ERROR_STATE;
 				return (line);
 			}
-			ft_memcpy(line, &u.buffer[u.start], inl - u.start + 1);
-			line[inl - u.start + 1] = '\0';
-			u.start = inl + 1;
+			ft_memcpy(line, &u.buffer[u.start], inl - u.start);
+			line[inl - u.start] = '\0';
+			u.start = inl;
 			if (u.state == EOL_STATE)
 				u.state = FINISHED_STATE;
 			return (line);
