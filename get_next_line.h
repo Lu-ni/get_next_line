@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:34 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/02 18:27:22 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/02 19:18:36 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <sys/_types/_size_t.h>
 #include <sys/_types/_ssize_t.h>
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 42
+#define BUFFER_SIZE 1
 #endif
 #define INIT_DONE 1
 #define ERROR_STATE 2

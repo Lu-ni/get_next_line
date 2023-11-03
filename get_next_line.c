@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/02 19:03:52 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:37:38 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,23 @@ int check_return(char *str, size_t start, size_t end, size_t *inl)
 	return (0);
 }
 
+int  createline_with_return(t_utils *u, char **line, size_t *inl)
+{
+	*line = malloc(sizeof(char) * (*inl - u->start + 1));
+	if (!*line)
+	{
+		free(u->buffer);
+		u->state = ERROR_STATE;
+		return (1);
+	}
+	ft_memcpy(*line, &u->buffer[u->start], *inl - u->start);
+	*(*line + *inl - u->start) = '\0';
+	u->start = *inl;
+	if (u->state == EOL_STATE)
+		u->state = FINISHED_STATE;
+	return (0);
+}
+
 char *get_next_line(int fd)
 {
 	static t_utils u;
@@ -66,18 +83,8 @@ char *get_next_line(int fd)
 	{
 		if (u.state == EOL_STATE || check_return(u.buffer, u.start, u.end, &inl))
 		{
-			line = malloc(sizeof(char) * (inl - u.start + 1));
-			if (!line)
-			{
-				free(u.buffer);
-				u.state = ERROR_STATE;
-				return (line);
-			}
-			ft_memcpy(line, &u.buffer[u.start], inl - u.start);
-			line[inl - u.start] = '\0';
-			u.start = inl;
-			if (u.state == EOL_STATE)
-				u.state = FINISHED_STATE;
+			if(createline_with_return(&u, &line, &inl))
+				return ((char *) 0);
 			return (line);
 		}
 		else
@@ -104,7 +111,6 @@ char *get_next_line(int fd)
 				{
 					return (NULL);
 				}
-				// printf("buff:%s?\n", u.buffer);
 				u.end = u.end + endtmp - u.start;
 				u.start = 0;
 			}
