@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/03 13:37:38 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:54:54 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <libc.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <limits.h>
@@ -56,6 +57,23 @@ int  createline_with_return(t_utils *u, char **line, size_t *inl)
 	return (0);
 }
 
+int  createline_no_return(t_utils *u, char **line, size_t *inl)
+{
+	*line = malloc(sizeof(char) * (ft_strlen(u->buffer) + 1));
+	if (!*line)
+	{
+		free(u->buffer);
+		u->state = ERROR_STATE;
+		return (1);
+	}
+	ft_memcpy(*line, &u->buffer, ft_strlen(u->buffer));
+	*(*line + ft_strlen(u->buffer)) = '\0';
+	u->start = *inl;
+	if (u->state == EOL_STATE)
+		u->state = FINISHED_STATE;
+	return (0);
+}
+
 char *get_next_line(int fd)
 {
 	static t_utils u;
@@ -64,6 +82,7 @@ char *get_next_line(int fd)
 	char          *tmp;
 	size_t         endtmp;
 
+	line = (char *)0;
 	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ERROR_STATE)
 		return (NULL);
 	if (u.state == 0)
@@ -83,8 +102,16 @@ char *get_next_line(int fd)
 	{
 		if (u.state == EOL_STATE || check_return(u.buffer, u.start, u.end, &inl))
 		{
-			if(createline_with_return(&u, &line, &inl))
-				return ((char *) 0);
+			if (u.state == EOL_STATE)
+			{
+				if(createline_no_return(&u, &line, &inl))
+					return ((char *) 0);
+			}
+			else if (u.state == INIT_DONE)
+			{
+				if(createline_with_return(&u, &line, &inl))
+					return ((char *) 0);
+			}
 			return (line);
 		}
 		else
