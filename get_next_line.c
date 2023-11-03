@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/03 15:00:40 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/03 16:27:39 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,14 @@ int  createline_no_return(t_utils *u, char **line)
 	return (0);
 }
 
+char *clean_all(t_utils *u)
+{
+	if (u->buffer)
+		free(&u->buffer);
+	u->state = ERROR_STATE;
+	return ((char *)0);
+}
+
 char *get_next_line(int fd)
 {
 	static t_utils u;
@@ -87,9 +95,8 @@ char *get_next_line(int fd)
 		u.end = read(fd, u.buffer, BUFFER_SIZE);
 		if (u.end < 1)
 		{
-			free(u.buffer);
 			u.state = ERROR_STATE;
-			return (NULL);
+			return (clean_all(&u));
 		}
 		u.buffer[u.end] = '\0';
 		u.state = INIT_DONE;
@@ -99,9 +106,9 @@ char *get_next_line(int fd)
 		if (u.state == EOL_STATE || check_return(u.buffer, u.start, u.end, &inl))
 		{
 			if (u.state == EOL_STATE && createline_no_return(&u, &line))
-				return ((char *) 0);
+				return (clean_all(&u));
 			else if (u.state == INIT_DONE && createline_with_return(&u, &line, &inl))
-				return ((char *) 0);
+				return (clean_all(&u));
 			return (line);
 		}
 		else
@@ -109,9 +116,8 @@ char *get_next_line(int fd)
 			tmp = malloc(BUFFER_SIZE + 1);
 			if (!tmp)
 			{
-				free(u.buffer);
 				u.state = ERROR_STATE;
-				return (NULL);
+				return (clean_all(&u));
 			}
 			endtmp = read(fd, tmp, BUFFER_SIZE);
 			if (endtmp < 1) //not finish
@@ -126,13 +132,13 @@ char *get_next_line(int fd)
 				u.buffer = ft_strjoin(&u.buffer[u.start], tmp, u.buffer);
 				if (!u.buffer)
 				{
-					return (NULL);
+					return (clean_all(&u));
 				}
 				u.end = u.end + endtmp - u.start;
 				u.start = 0;
 			}
 		}
 	}
-	free(u.buffer);
+	clean_all(&u);
 	return (char *) 0;
 }
