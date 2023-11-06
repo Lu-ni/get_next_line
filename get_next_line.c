@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/06 16:01:54 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/06 16:43:20 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,13 @@ int read_all(t_utils *u)
 		else
 		{
 			tmp[endtmp] = '\0';
-			u->buffer = ft_strjoin(u->buffer, tmp);
+			u->bufferstart = ft_strjoin(u->bufferstart, tmp);
 			free(tmp);
-			if (!u->buffer)
+			if (!u->bufferstart)
 				return 1;
 		}
 	}
+	u->buffer = u->bufferstart;
 	return 0;
 }
 
@@ -57,13 +58,15 @@ char *get_next_line(int fd)
 		return (NULL);
 	if (u.state == 0)
 	{
-		u.buffer = malloc(BUFFER_SIZE + 1);
-		u.end = read(fd, u.buffer, BUFFER_SIZE);
+		u.bufferstart = malloc(BUFFER_SIZE + 1);
+		u.end = read(fd, u.bufferstart, BUFFER_SIZE);
 		if (u.end < 1)
 		{
 			u.state = ERROR_STATE;
+			free(u.bufferstart);
+			return (char *)0;
 		}
-		u.buffer[u.end] = '\0';
+		u.bufferstart[u.end] = '\0';
 		u.state = INIT_DONE;
 	}	
 	
