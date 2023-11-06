@@ -35,8 +35,12 @@ int get_data(t_utils *u)
 		if (end == 0)
 		{
 			u->eol = 1;
+			free(tmp);
 			return (0);
 		}
+		if (end < BUFFER_SIZE)
+			u->eol = 1;
+
 		tmp[end] = '\0';
 		u->buffer = ft_strjoin(u, tmp);
 		if (!u->buffer)
@@ -67,20 +71,26 @@ char *get_next_line(int fd)
 			return (char *) 0;
 		}
 		u.buffer[u.end] = '\0';
+		u.bufferstart = u.buffer;
 		u.state = INIT_DONE;
 	}
 
-	get_data(&u);
+	if (get_data(&u))
+	{
+		u.state = ERROR_STATE;
+		return (char *) 0;
+	}
 	next_nl = ft_strchr(u.buffer, '\n');
 	if (next_nl)
 	{
 		line = ft_substr(u.buffer, 0, next_nl - u.buffer + 1);
 		u.buffer = next_nl + 1;
 	}
-	else if (u.eol)
+	else if (u.eol && u.state != ALL_DONE)
 	{
 		line = ft_substr(u.buffer, 0, ft_strlen(u.buffer));
 		u.state = ALL_DONE;
+		free(u.bufferstart);
 	}
 	return line;
 }
