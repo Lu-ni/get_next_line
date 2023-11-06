@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/06 17:53:32 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/06 18:08:03 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,84 +16,6 @@
 #include <stdio.h>
 #include "get_next_line.h"
 
-int read_all(t_utils *u)
-{
-	char 		*tmp;
-	int endtmp;
-
-	tmp = malloc(BUFFER_SIZE + 1);
-	if (!tmp)
-		return 1;
-	endtmp = read(u->fd, tmp, BUFFER_SIZE);
-	if (endtmp < 1)
-	{
-		free(tmp);
-		u->state = EOL_STATE;
-	}
-	else
-	{
-		tmp[endtmp] = '\0';
-		u->buffer = ft_strjoin(u->buffer, tmp);
-		free(tmp);
-		if (!u->buffer)
-			return 1;
-	}
-	u->bufferstart = u->buffer;
-	return 0;
-}
-
 char *get_next_line(int fd)
 {
-	//init
-	static t_utils u;
-	char          *line;
-	char 		*next_nl;
-
-	line = (char *)0;
-	u.fd = fd;
-	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ERROR_STATE)
-		return (NULL);
-	if (u.state == 0)
-	{
-		u.bufferstart = malloc(BUFFER_SIZE + 1);
-		u.end = read(fd, u.bufferstart, BUFFER_SIZE);
-		if (u.end < 1)
-		{
-			u.state = ERROR_STATE;
-			free(u.bufferstart);
-			return (char *)0;
-		}
-		u.bufferstart[u.end] = '\0';
-		u.state = INIT_DONE;
-		u.buffer = u.bufferstart;
-	}	
-	
-	//return line
-	while (!line && u.state != ALL_DONE)
-	{
-		if (u.state == INIT_DONE || u.state == EOL_STATE)
-		{
-			next_nl = ft_strchr(u.buffer, '\n');
-			if (next_nl)
-			{
-				line = ft_substr(u.buffer, 0, next_nl - u.buffer + 1);	
-				u.buffer = next_nl + 1;
-			}
-			else
-			{
-				if (u.state == EOL_STATE)
-				{
-					line = ft_substr(u.buffer, 0, ft_strlen(u.buffer));	
-					free(u.bufferstart);
-					u.state = ALL_DONE;
-				}
-				else
-				{
-					read_all(&u);
-				}
-				//read next line
-			}
-		}
-	}
-	return (line);
 }
