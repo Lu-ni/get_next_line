@@ -6,15 +6,13 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:34 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/03 13:48:20 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/06 14:08:45 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 #define GET_NEXT_LINE_H
 
-#include <sys/_types/_size_t.h>
-#include <sys/_types/_ssize_t.h>
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 1
 #endif
@@ -24,14 +22,6 @@
 #define EOL_STATE 4
 typedef struct s_utlils
 {
-	char 		*buffer;
-	size_t   	start;
-	ssize_t   	end;
-	int   		state;
 
 } t_utils;
-void *ft_memcpy(void *dst, const void *src, size_t n);
-char *ft_strjoin(char *s1, char *s2, char *starts1);
-char *get_next_line(int fd);
-size_t ft_strlen(const char *str);
 #endif
