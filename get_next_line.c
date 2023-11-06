@@ -58,7 +58,7 @@ char *get_next_line(int fd)
 
 	line = (char *) 0;
 	u.fd = fd;
-	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ERROR_STATE)
+	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ERROR_STATE || u.state == ALL_DONE)
 		return (NULL);
 	if (u.state == 0)
 	{

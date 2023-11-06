@@ -16,7 +16,7 @@
 #include <sys/types.h>
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 10
 #endif
 #define INIT_DONE 1
 #define READ_DONE 2
