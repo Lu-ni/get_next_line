@@ -91,6 +91,7 @@ char *get_next_line(int fd)
 	if (get_data(&u))
 	{
 		u.state = ERROR_STATE;
+		free(u.bufferstart);
 		return (char *) 0;
 	}
 	next_nl = ft_strchr(u.buffer, '\n');
