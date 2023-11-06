@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/06 16:43:20 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/06 17:53:32 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,27 +21,24 @@ int read_all(t_utils *u)
 	char 		*tmp;
 	int endtmp;
 
-	while (u->state == INIT_DONE)
+	tmp = malloc(BUFFER_SIZE + 1);
+	if (!tmp)
+		return 1;
+	endtmp = read(u->fd, tmp, BUFFER_SIZE);
+	if (endtmp < 1)
 	{
-		tmp = malloc(BUFFER_SIZE + 1);
-		if (!tmp)
-			return 1;
-		endtmp = read(u->fd, tmp, BUFFER_SIZE);
-		if (endtmp < 1)
-		{
-			free(tmp);
-			u->state = READ_DONE;
-		}
-		else
-		{
-			tmp[endtmp] = '\0';
-			u->bufferstart = ft_strjoin(u->bufferstart, tmp);
-			free(tmp);
-			if (!u->bufferstart)
-				return 1;
-		}
+		free(tmp);
+		u->state = EOL_STATE;
 	}
-	u->buffer = u->bufferstart;
+	else
+	{
+		tmp[endtmp] = '\0';
+		u->buffer = ft_strjoin(u->buffer, tmp);
+		free(tmp);
+		if (!u->buffer)
+			return 1;
+	}
+	u->bufferstart = u->buffer;
 	return 0;
 }
 
@@ -68,29 +65,34 @@ char *get_next_line(int fd)
 		}
 		u.bufferstart[u.end] = '\0';
 		u.state = INIT_DONE;
+		u.buffer = u.bufferstart;
 	}	
 	
-	//read all
-	if (u.state == INIT_DONE &&	read_all(&u))
-	{
-		u.state = ERROR_STATE;
-		free(u.bufferstart);
-		return (char *) 0;
-	}
 	//return line
-	if (u.state == READ_DONE)
+	while (!line && u.state != ALL_DONE)
 	{
-		next_nl = ft_strchr(u.buffer, '\n');
-		if (next_nl)
+		if (u.state == INIT_DONE || u.state == EOL_STATE)
 		{
-			line = ft_substr(u.buffer, 0, next_nl - u.buffer + 1);	
-			u.buffer = next_nl + 1;
-		}
-		else
-		{
-			line = ft_substr(u.buffer, 0, ft_strlen(u.buffer));	
-			free(u.bufferstart);
-			u.state = ALL_DONE;
+			next_nl = ft_strchr(u.buffer, '\n');
+			if (next_nl)
+			{
+				line = ft_substr(u.buffer, 0, next_nl - u.buffer + 1);	
+				u.buffer = next_nl + 1;
+			}
+			else
+			{
+				if (u.state == EOL_STATE)
+				{
+					line = ft_substr(u.buffer, 0, ft_strlen(u.buffer));	
+					free(u.bufferstart);
+					u.state = ALL_DONE;
+				}
+				else
+				{
+					read_all(&u);
+				}
+				//read next line
+			}
 		}
 	}
 	return (line);

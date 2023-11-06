@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:34 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/06 15:47:10 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/06 17:36:06 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #define READ_DONE 2
 #define ERROR_STATE 3
 #define ALL_DONE 4
+#define EOL_STATE 5
 
 typedef struct s_utlils
 {
