@@ -61,11 +61,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return ((char *)0);
 	if (start >= ft_strlen(s))
 	{
-		substr = (char *)malloc(1);
-		if (!substr)
-			return ((char *)0);
-		substr[0] = '\0';
-		return (substr);
+		return ((char *)0);
 	}
 	if (ft_strlen(&s[start]) >= len)
 		substr = (char *)malloc(len + 1);
