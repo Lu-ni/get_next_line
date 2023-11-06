@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/06 13:00:50 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/06 13:21:01 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ char *get_next_line(int fd)
 				return (clean_all(&u));
 			else if (u.state == INIT_DONE && createline_with_return(&u, &line, &inl))
 				return (clean_all(&u));
+			if (u.state == FINISHED_STATE)
+				free(u.buffer);
 			return (line);
 		}
 		else
@@ -125,6 +127,8 @@ char *get_next_line(int fd)
 			}
 			else
 			{
+				if (endtmp < BUFFER_SIZE)
+					u.state = EOL_STATE;
 				tmp[endtmp] = '\0';
 				u.buffer = ft_strjoin(&u.buffer[u.start], tmp, u.buffer);
 				if (!u.buffer)
