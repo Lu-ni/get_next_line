@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/03 16:27:39 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/06 13:00:50 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int  createline_with_return(t_utils *u, char **line, size_t *inl)
 	*line = malloc(sizeof(char) * (*inl - u->start + 1));
 	if (!*line)
 	{
-		free(u->buffer);
 		u->state = ERROR_STATE;
 		return (1);
 	}
@@ -60,7 +59,6 @@ int  createline_no_return(t_utils *u, char **line)
 	*line = malloc(sizeof(char) * (ft_strlen(u->buffer) + 1));
 	if (!*line)
 	{
-		free(u->buffer);
 		u->state = ERROR_STATE;
 		return (1);
 	}
@@ -72,8 +70,7 @@ int  createline_no_return(t_utils *u, char **line)
 
 char *clean_all(t_utils *u)
 {
-	if (u->buffer)
-		free(&u->buffer);
+	free(u->buffer);
 	u->state = ERROR_STATE;
 	return ((char *)0);
 }
@@ -139,6 +136,5 @@ char *get_next_line(int fd)
 			}
 		}
 	}
-	clean_all(&u);
 	return (char *) 0;
 }
