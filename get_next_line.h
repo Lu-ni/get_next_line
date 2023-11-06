@@ -16,7 +16,7 @@
 #include <sys/types.h>
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
+#define BUFFER_SIZE 1
 #endif
 #define INIT_DONE 1
 #define READ_DONE 2
@@ -26,17 +26,18 @@
 
 typedef struct s_utlils
 {
-	char *buffer;
-	char *bufferstart;
-	int  state;
-	size_t start;
+	char   *buffer;
+	char   *bufferstart;
+	int     state;
+	int     eol;
+	size_t  start;
 	ssize_t end;
 	int     fd;
 
 } t_utils;
-size_t	ft_strlen(const char *str);
-char	*ft_strjoin(char const *s1, char const *s2);
-char *get_next_line(int fd);
-char	*ft_strchr(const char *str, int c);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
+size_t ft_strlen(const char *str);
+char  *ft_strjoin(char const *s1, char const *s2);
+char  *get_next_line(int fd);
+char  *ft_strchr(const char *str, int c);
+char  *ft_substr(char const *s, unsigned int start, size_t len);
 #endif

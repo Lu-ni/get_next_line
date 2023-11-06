@@ -10,12 +10,77 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 #include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
-#include "get_next_line.h"
+
+int get_data(t_utils *u)
+{
+	char   *tmp;
+	ssize_t end;
+
+	while (!ft_strchr(u->buffer, '\n') || u->eol)
+	{
+		tmp = malloc(BUFFER_SIZE + 1);
+		if (!tmp)
+			return (1);
+		end = read(u->fd, tmp, BUFFER_SIZE);
+		if (end < 0)
+		{
+			free(tmp);
+			return (1);
+		}
+		if (end == 0)
+		{
+			u->eol = 1;
+			return (0);
+		}
+		tmp[end] = '\0';
+		u->buffer = ft_strjoin(u, tmp);
+		if (!u->buffer)
+			return (1);
+		free(tmp);
+	}
+	return (0);
+}
 
 char *get_next_line(int fd)
 {
+	static t_utils u;
+	char          *line;
+	char          *next_nl;
+
+	line = (char *) 0;
+	u.fd = fd;
+	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ERROR_STATE)
+		return (NULL);
+	if (u.state == 0)
+	{
+		u.buffer = malloc(BUFFER_SIZE + 1);
+		u.end = read(fd, u.buffer, BUFFER_SIZE);
+		if (u.end < 1)
+		{
+			u.state = ERROR_STATE;
+			free(u.buffer);
+			return (char *) 0;
+		}
+		u.buffer[u.end] = '\0';
+		u.state = INIT_DONE;
+	}
+
+	get_data(&u);
+	next_nl = ft_strchr(u.buffer, '\n');
+	if (next_nl)
+	{
+		line = ft_substr(u.buffer, 0, next_nl - u.buffer + 1);
+		u.buffer = next_nl + 1;
+	}
+	else if (u.eol)
+	{
+		line = ft_substr(u.buffer, 0, ft_strlen(u.buffer));
+		u.state = ALL_DONE;
+	}
+	return line;
 }
