@@ -16,6 +16,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+void reset_struct(t_utils *u)
+{
+	u->buffer = 0;
+	u->bufferstart = 0;
+	u->state = 0;
+	u->eol = 0;
+	u->start = 0;
+	u->end = 0;
+	u->fd = 0;
+}
+
 int get_data(t_utils *u)
 {
 	char   *tmp;
@@ -57,8 +68,10 @@ char *get_next_line(int fd)
 	char          *next_nl;
 
 	line = (char *) 0;
+	if (u.state == ERROR_STATE)
+		reset_struct(&u);
 	u.fd = fd;
-	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ERROR_STATE || u.state == ALL_DONE)
+	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ALL_DONE)
 		return (NULL);
 	if (u.state == 0)
 	{
