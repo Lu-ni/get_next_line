@@ -68,10 +68,10 @@ char *get_next_line(int fd)
 	char          *next_nl;
 
 	line = (char *) 0;
-	if (u.state == ERROR_STATE)
+	if (u.state == ERROR_STATE || u.state == ALL_DONE)
 		reset_struct(&u);
 	u.fd = fd;
-	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX || u.state == ALL_DONE)
+	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX)
 		return (NULL);
 	if (u.state == 0)
 	{
