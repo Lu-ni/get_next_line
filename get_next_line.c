@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/07 13:36:08 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/07 13:39:33 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ char	*get_next_line(int fd)
 {
 	static t_utils	u;
 	char			*line;
-	char			*next_nl;
 
 	line = (char *) 0;
 	if (u.state == ERROR_STATE || u.state == ALL_DONE)
@@ -92,11 +91,11 @@ char	*get_next_line(int fd)
 		return ((char *) 0);
 	if (get_data(&u) && free_n_state(&u, ERROR_STATE, u.bufferstart))
 		return ((char *) 0);
-	next_nl = ft_strchr(u.buffer, '\n');
-	if (next_nl)
+	u.next_nl = ft_strchr(u.buffer, '\n');
+	if (u.next_nl)
 	{
-		line = ft_substr(u.buffer, 0, next_nl - u.buffer + 1);
-		u.buffer = next_nl + 1;
+		line = ft_substr(u.buffer, 0, u.next_nl - u.buffer + 1);
+		u.buffer = u.next_nl + 1;
 	}
 	else if (u.eol && u.state != ALL_DONE)
 	{

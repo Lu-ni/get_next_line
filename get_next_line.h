@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:34 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/06 17:36:06 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/07 13:38:59 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_utlils
 	size_t	start;
 	ssize_t	end;
 	int		fd;
-
+	char			*next_nl;
 }			t_utils;
 size_t		ft_strlen(const char *str);
 char		*ft_strjoin(t_utils *u, char const *s2);
