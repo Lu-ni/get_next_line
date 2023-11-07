@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/07 13:06:29 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/07 13:26:31 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@ void	reset_struct(t_utils *u)
 	u->fd = 0;
 }
 
+int		free_n_state(t_utils *u, int state, char *str2free)
+{
+	if (str2free)
+		free(str2free);
+	if (state == EOL_STATE)
+		u->eol = 1;
+	else if (state)
+		u->state = state;
+	return (1);
+}
 int	get_data(t_utils *u)
 {
 	char	*tmp;
@@ -38,17 +48,10 @@ int	get_data(t_utils *u)
 		if (!tmp)
 			return (1);
 		end = read(u->fd, tmp, BUFFER_SIZE);
-		if (end < 0)
-		{
-			free(tmp);
+		if (end < 0 && free_n_state(u, -1, tmp))
 			return (1);
-		}
-		if (end == 0)
-		{
-			u->eol = 1;
-			free(tmp);
+		if (end == 0 && free_n_state(u, EOL_STATE, tmp))
 			return (0);
-		}
 		if (end < BUFFER_SIZE)
 			u->eol = 1;
 		tmp[end] = '\0';
