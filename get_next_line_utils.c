@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 13:01:14 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/07 13:02:21 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/07 13:53:52 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ size_t	ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+void	set_value_buffer(t_utils *u, char *ptr)
+{
+	u->buffer = ptr;
+	u->bufferstart = ptr;
 }
 
 char	*ft_strjoin(t_utils *u, char const *s2)
@@ -48,24 +54,30 @@ char	*ft_strjoin(t_utils *u, char const *s2)
 		*joinstr++ = s2[i++];
 	*joinstr = '\0';
 	free(u->bufferstart);
-	u->buffer = startstr;
-	u->bufferstart = startstr;
+	set_value_buffer(u, startstr);
 	return (startstr);
 }
 
-char	*ft_strchr(const char *str, int c)
+char	*ft_strchr(t_utils *u, int c)
 {
 	char	*strcpy;
 
-	strcpy = (char *)str;
+	strcpy = u->buffer;
 	while (*strcpy)
 	{
 		if (*strcpy == (char)c)
+		{
+			u->next_nl = strcpy;
 			return (strcpy);
+		}
 		strcpy++;
 	}
 	if ((char)c == '\0')
+	{
+		u->next_nl = strcpy;
 		return (strcpy);
+	}
+	u->next_nl = (char *) 0;
 	return ((char *)0);
 }
 

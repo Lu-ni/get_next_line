@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/07 13:39:33 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/07 13:49:31 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	reset_struct(t_utils *u)
 	u->fd = 0;
 }
 
-int		free_n_state(t_utils *u, int state, char *str2free)
+int	free_n_state(t_utils *u, int state, char *str2free)
 {
 	if (str2free)
 		free(str2free);
@@ -43,7 +43,7 @@ int	get_data(t_utils *u)
 	char	*tmp;
 	ssize_t	end;
 
-	while (!ft_strchr(u->buffer, '\n') || u->eol)
+	while (!ft_strchr(u, '\n') || u->eol)
 	{
 		tmp = malloc(BUFFER_SIZE + 1);
 		if (!tmp)
@@ -64,7 +64,7 @@ int	get_data(t_utils *u)
 	return (0);
 }
 
-int    init_struct(t_utils *u)
+int	init_struct(t_utils *u)
 {
 	u->buffer = malloc(BUFFER_SIZE + 1);
 	u->end = read(u->fd, u->buffer, BUFFER_SIZE);
@@ -91,8 +91,7 @@ char	*get_next_line(int fd)
 		return ((char *) 0);
 	if (get_data(&u) && free_n_state(&u, ERROR_STATE, u.bufferstart))
 		return ((char *) 0);
-	u.next_nl = ft_strchr(u.buffer, '\n');
-	if (u.next_nl)
+	if (ft_strchr(&u, '\n'))
 	{
 		line = ft_substr(u.buffer, 0, u.next_nl - u.buffer + 1);
 		u.buffer = u.next_nl + 1;
