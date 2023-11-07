@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/07 13:26:31 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/07 13:36:08 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int		free_n_state(t_utils *u, int state, char *str2free)
 		u->state = state;
 	return (1);
 }
+
 int	get_data(t_utils *u)
 {
 	char	*tmp;
@@ -63,6 +64,18 @@ int	get_data(t_utils *u)
 	return (0);
 }
 
+int    init_struct(t_utils *u)
+{
+	u->buffer = malloc(BUFFER_SIZE + 1);
+	u->end = read(u->fd, u->buffer, BUFFER_SIZE);
+	if (u->end < 1 && free_n_state(u, ERROR_STATE, u->buffer))
+		return (1);
+	u->buffer[u->end] = '\0';
+	u->bufferstart = u->buffer;
+	u->state = INIT_DONE;
+	return (0);
+}
+
 char	*get_next_line(int fd)
 {
 	static t_utils	u;
@@ -75,26 +88,10 @@ char	*get_next_line(int fd)
 	u.fd = fd;
 	if (BUFFER_SIZE < 1 || BUFFER_SIZE > SIZE_T_MAX)
 		return (NULL);
-	if (u.state == 0)
-	{
-		u.buffer = malloc(BUFFER_SIZE + 1);
-		u.end = read(fd, u.buffer, BUFFER_SIZE);
-		if (u.end < 1)
-		{
-			u.state = ERROR_STATE;
-			free(u.buffer);
-			return ((char *) 0);
-		}
-		u.buffer[u.end] = '\0';
-		u.bufferstart = u.buffer;
-		u.state = INIT_DONE;
-	}
-	if (get_data(&u))
-	{
-		u.state = ERROR_STATE;
-		free(u.bufferstart);
+	if (u.state == 0 && init_struct(&u))
 		return ((char *) 0);
-	}
+	if (get_data(&u) && free_n_state(&u, ERROR_STATE, u.bufferstart))
+		return ((char *) 0);
 	next_nl = ft_strchr(u.buffer, '\n');
 	if (next_nl)
 	{
