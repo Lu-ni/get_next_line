@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/07 13:01:14 by lnicolli          #+#    #+#             */
+/*   Updated: 2023/11/07 13:02:21 by lnicolli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 #include <stdlib.h>
 
-size_t ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (str[i])
@@ -11,21 +23,21 @@ size_t ft_strlen(const char *str)
 	return (i);
 }
 
-char *ft_strjoin(t_utils *u, char const *s2)
+char	*ft_strjoin(t_utils *u, char const *s2)
 {
-	char *joinstr;
-	char *startstr;
-	int   i;
-	char *s1;
+	char	*joinstr;
+	char	*startstr;
+	int		i;
+	char	*s1;
 
 	s1 = u->buffer;
 	if (!s1 || !s2)
-		return ((char *) 0);
+		return ((char *)0);
 	joinstr = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!joinstr)
 	{
-		free((char *) s1);
-		return ((char *) 0);
+		free((char *)s1);
+		return ((char *)0);
 	}
 	startstr = joinstr;
 	i = 0;
@@ -41,39 +53,39 @@ char *ft_strjoin(t_utils *u, char const *s2)
 	return (startstr);
 }
 
-char *ft_strchr(const char *str, int c)
+char	*ft_strchr(const char *str, int c)
 {
-	char *strcpy;
+	char	*strcpy;
 
-	strcpy = (char *) str;
+	strcpy = (char *)str;
 	while (*strcpy)
 	{
-		if (*strcpy == (char) c)
+		if (*strcpy == (char)c)
 			return (strcpy);
 		strcpy++;
 	}
-	if ((char) c == '\0')
+	if ((char)c == '\0')
 		return (strcpy);
-	return ((char *) 0);
+	return ((char *)0);
 }
 
-char *ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char *substr;
-	char *startsubstr;
+	char	*substr;
+	char	*startsubstr;
 
 	if (!s)
-		return ((char *) 0);
+		return ((char *)0);
 	if (start >= ft_strlen(s))
 	{
-		return ((char *) 0);
+		return ((char *)0);
 	}
 	if (ft_strlen(&s[start]) >= len)
-		substr = (char *) malloc(len + 1);
+		substr = (char *)malloc(len + 1);
 	else
-		substr = (char *) malloc(ft_strlen(&s[start]) + 1);
+		substr = (char *)malloc(ft_strlen(&s[start]) + 1);
 	if (!substr)
-		return ((char *) 0);
+		return ((char *)0);
 	startsubstr = substr;
 	while (s[start] && (len-- > 0))
 		*substr++ = s[start++];

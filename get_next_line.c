@@ -6,7 +6,7 @@
 /*   By: lnicolli <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:01:15 by lnicolli          #+#    #+#             */
-/*   Updated: 2023/11/06 18:08:03 by lnicolli         ###   ########.fr       */
+/*   Updated: 2023/11/07 13:06:29 by lnicolli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void reset_struct(t_utils *u)
+void	reset_struct(t_utils *u)
 {
 	u->buffer = 0;
 	u->bufferstart = 0;
@@ -27,10 +27,10 @@ void reset_struct(t_utils *u)
 	u->fd = 0;
 }
 
-int get_data(t_utils *u)
+int	get_data(t_utils *u)
 {
-	char   *tmp;
-	ssize_t end;
+	char	*tmp;
+	ssize_t	end;
 
 	while (!ft_strchr(u->buffer, '\n') || u->eol)
 	{
@@ -51,7 +51,6 @@ int get_data(t_utils *u)
 		}
 		if (end < BUFFER_SIZE)
 			u->eol = 1;
-
 		tmp[end] = '\0';
 		u->buffer = ft_strjoin(u, tmp);
 		if (!u->buffer)
@@ -61,11 +60,11 @@ int get_data(t_utils *u)
 	return (0);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static t_utils u;
-	char          *line;
-	char          *next_nl;
+	static t_utils	u;
+	char			*line;
+	char			*next_nl;
 
 	line = (char *) 0;
 	if (u.state == ERROR_STATE || u.state == ALL_DONE)
@@ -81,18 +80,17 @@ char *get_next_line(int fd)
 		{
 			u.state = ERROR_STATE;
 			free(u.buffer);
-			return (char *) 0;
+			return ((char *) 0);
 		}
 		u.buffer[u.end] = '\0';
 		u.bufferstart = u.buffer;
 		u.state = INIT_DONE;
 	}
-
 	if (get_data(&u))
 	{
 		u.state = ERROR_STATE;
 		free(u.bufferstart);
-		return (char *) 0;
+		return ((char *) 0);
 	}
 	next_nl = ft_strchr(u.buffer, '\n');
 	if (next_nl)
@@ -106,5 +104,5 @@ char *get_next_line(int fd)
 		u.state = ALL_DONE;
 		free(u.bufferstart);
 	}
-	return line;
+	return (line);
 }
